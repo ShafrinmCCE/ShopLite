@@ -67,4 +67,9 @@ public class ProductController {
     public List<Product> getLowStockProducts() {
         return billingService.getLowStock();
     }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
 }

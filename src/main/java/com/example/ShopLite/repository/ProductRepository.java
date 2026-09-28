@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ProductRepository
-        extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.stockQuantity < p.reorderThreshold")
     List<Product> findBelowReorderLevel();
+
+    List<Product> findByNameContainingIgnoreCase(String name);
 }
