@@ -20,13 +20,26 @@ public class ProductController {
     @Autowired
     private BillingService billingService;
 
-    // Add product
+    // CREATE
     @PostMapping
     public Product addProduct(@Valid @RequestBody Product product) {
         return productRepository.save(product);
     }
 
-    // Update product
+    // READ ALL
+    @GetMapping
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    // READ ONE
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    // UPDATE
     @PutMapping("/{id}")
     public Product updateProduct(
             @PathVariable Long id,
@@ -36,7 +49,20 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-    // View low-stock products
+    // DELETE
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Product not found");
+        }
+
+        productRepository.deleteById(id);
+
+        return "Product deleted successfully";
+    }
+
+    // LOW STOCK
     @GetMapping("/low-stock")
     public List<Product> getLowStockProducts() {
         return billingService.getLowStock();
